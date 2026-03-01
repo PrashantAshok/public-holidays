@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# Public Holidays
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application that displays public holidays for countries around the world. Built with TypeScript, Vite, and React 19.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Country Selection**: Browse and select from a comprehensive list of countries
+- **Holiday Display**: View public holidays for the selected country with dates and names
+- **Loading States**: User-friendly loading indicators while fetching data
+- **Error Handling**: Graceful error messages if data fetching fails
+- **Real-time Data**: Integrates with the [Open Holidays API](https://openholidaysapi.org/) for accurate, up-to-date holiday information
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - Modern UI library
+- **TypeScript** - Type-safe development
+- **Vite** - Lightning-fast build tool
+- **ESLint** - Code quality and consistency
+- **PaperCSS** - Lightweight CSS framework
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd public-holidays
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+### Available Scripts
+
+- **`npm run dev`** - Start the development server with hot module replacement
+- **`npm run build`** - Build the application for production
+- **`npm run lint`** - Run ESLint to check code quality
+- **`npm run preview`** - Preview the production build locally
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── CountrySelector.tsx   # Dropdown for country selection
+│   ├── PublicHolidays.tsx    # Displays holidays for selected country
+│   └── Spinner.tsx           # Loading indicator component
+├── App.tsx                   # Main application component
+├── types.ts                  # TypeScript type definitions
+├── main.tsx                  # Entry point
+├── App.css                   # Application styles
+└── index.css                 # Global styles
+```
+
+## API Integration
+
+This application fetches data from the [Open Holidays API](https://openholidaysapi.org/):
+
+- **Countries endpoint**: `https://openholidaysapi.org/Countries?languageIsoCode=EN`
+- **Holidays endpoint**: Fetches holidays for the current year for selected countries
+
+## Development
+
+### Running the Development Server
+
+```bash
+npm run dev
+```
+
+The application will start at `http://localhost:5173` with hot module replacement enabled.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The optimized build will be generated in the `dist/` directory.
+
+## License
+
+This project is open source and available under the MIT License.

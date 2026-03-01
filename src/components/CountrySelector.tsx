@@ -8,7 +8,9 @@ export default function CountrySelector({
 }: CountrySelectorProps) {
     return (
         <div className="country-selector">
-            { countryLoadingError }    
+            {countryLoadingError && (
+                <p className="error" role="alert">{countryLoadingError}</p>
+            )}
             <label htmlFor="country">Select country</label>
             <select id="country" value={selectedCountry} onChange={onCountryChange}>
                 {

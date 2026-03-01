@@ -30,6 +30,9 @@ function App() {
           isoCode: country.isoCode
         })));
       } catch (ex) {
+        if (ex instanceof Error && ex.name === 'AbortError') {
+          return; // Silently exit, this was an intentional cancellation
+        }
         console.error('error loading countries', ex);
         setCountryLoadingError('Error loading countries');
       } finally {
@@ -61,6 +64,9 @@ function App() {
         const holidaysResponse = await response.json();
         setHolidays(holidaysResponse);
       } catch (ex) {
+        if (ex instanceof Error && ex.name === 'AbortError') {
+          return; // Silently exit, this was an intentional cancellation
+        }
         console.error('error loading holidays', ex);
         setHolidayLoadingError('Error loading holidays');
       } finally {
