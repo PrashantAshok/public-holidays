@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.country-selector {
+  text-align: left;
+}
+
 .public-holidays {
   list-style-type: none;
   margin: 10px;

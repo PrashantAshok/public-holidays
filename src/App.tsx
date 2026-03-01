@@ -3,64 +3,91 @@ import './App.css'
 import CountrySelector from './components/CountrySelector';
 import PublicHolidays from './components/PublicHolidays';
 import Spinner from './components/Spinner';
+import type { Holiday, Country, CountryResponse } from './types';
+const CURRENT_YEAR = new Date().getFullYear();
 
 function App() {
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState('NL');
-  const [holidays, setHolidays] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [holidays, setHolidays] = useState<Holiday[]>([]);
+  const [isCountriesLoading, setIsCountriesLoading] = useState(true);
+  const [isHolidaysLoading, setIsHolidaysLoading] = useState(true);
+  const [countryLoadingError, setCountryLoadingError] = useState('');
+  const [holidayLoadingError, setHolidayLoadingError] = useState('');
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     async function fetchCountries() {
-      setIsLoading(true);
       try {
-        const response = await fetch('https://openholidaysapi.org/Countries?languageIsoCode=EN');
+        setCountryLoadingError('');
+        setIsCountriesLoading(true);
+        const response = await fetch('https://openholidaysapi.org/Countries?languageIsoCode=EN', { signal });
         const data = await response.json();
-        setCountries(data.map((country: { name: { text: string; }[]; isoCode: string; }) => ({
+        setCountries(data.map((country: CountryResponse) => ({
           name: country.name[0].text,
           isoCode: country.isoCode
         })));
-        await fetchHolidays(selectedCountry, new Date().getFullYear());
       } catch (ex) {
         console.error('error loading countries', ex);
+        setCountryLoadingError('Error loading countries');
       } finally {
-        setIsLoading(false);
+        setIsCountriesLoading(false);
       }
 
     }
     fetchCountries();
+
+    return () => {
+      controller.abort();
+    }
   }, []);
 
-  const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setSelectedCountry(selectedCountry);
-    const currentYear = new Date().getFullYear();
-    await fetchHolidays(selectedCountry, currentYear);
-  }
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const countryCode = event.target.value;
+    setSelectedCountry(countryCode);
+  };
 
-  const fetchHolidays = async (selectedCountry: string, currentYear: number) => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`https://openholidaysapi.org/PublicHolidays?countryIsoCode=${selectedCountry}&validFrom=${currentYear}-01-01&validTo=${currentYear}-12-31&languageIsoCode=EN`);
-      const holidaysResponse = await response.json();
-      setHolidays(holidaysResponse);
-    } catch (ex) {
-      console.error('error loading holidays', ex);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    async function fetchHolidays() {
+      try {
+        setHolidayLoadingError('');
+        setIsHolidaysLoading(true);
+        const response = await fetch(`https://openholidaysapi.org/PublicHolidays?countryIsoCode=${selectedCountry}&validFrom=${CURRENT_YEAR}-01-01&validTo=${CURRENT_YEAR}-12-31&languageIsoCode=EN`, { signal });
+        const holidaysResponse = await response.json();
+        setHolidays(holidaysResponse);
+      } catch (ex) {
+        console.error('error loading holidays', ex);
+        setHolidayLoadingError('Error loading holidays');
+      } finally {
+        setIsHolidaysLoading(false);
+      }
     }
-  }
+
+    fetchHolidays();
+
+    return () => {
+      controller.abort();
+    }
+  }, [selectedCountry]);
 
   return (
     <>
-      {isLoading && <Spinner />}
+      {isCountriesLoading && <Spinner />}
       <CountrySelector
         countries={countries}
         selectedCountry={selectedCountry}
-        handleCountryChange={handleCountryChange}
+        countryLoadingError={countryLoadingError}
+        onCountryChange={handleCountryChange}
       />
+      {isHolidaysLoading && <Spinner />}
       <PublicHolidays
         holidays={holidays}
+        holidayLoadingError={holidayLoadingError}
       />
     </>
   )

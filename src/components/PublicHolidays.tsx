@@ -1,6 +1,9 @@
-export default function PublicHolidays({ holidays }) {
+import type { HolidaysProps } from "../types";
+
+export default function PublicHolidays({ holidays, holidayLoadingError }: HolidaysProps) {
     return (
         <ol className='public-holidays'>
+            {holidayLoadingError}
             {
                 holidays.map(holiday => {
                     const formattedDate = new Date(holiday.startDate).toLocaleDateString('en-NL', {

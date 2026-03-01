@@ -1,7 +1,16 @@
-export default function CountrySelector({ countries, selectedCountry, handleCountryChange }) {
+import type { CountrySelectorProps } from '../types';
+
+export default function CountrySelector({
+    countries,
+    selectedCountry,
+    countryLoadingError,
+    onCountryChange
+}: CountrySelectorProps) {
     return (
-        <section className="country-selector">
-            <select value={selectedCountry} onChange={handleCountryChange}>
+        <div className="country-selector">
+            { countryLoadingError }    
+            <label htmlFor="country">Select country</label>
+            <select id="country" value={selectedCountry} onChange={onCountryChange}>
                 {
                     countries.map(country => {
                         return (
@@ -10,6 +19,6 @@ export default function CountrySelector({ countries, selectedCountry, handleCoun
                     })
                 }
             </select>
-        </section>
-    )
+        </div>
+    );
 }
