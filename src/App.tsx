@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import './App.css'
 import CountrySelector from './components/CountrySelector';
 import PublicHolidays from './components/PublicHolidays';
@@ -12,10 +12,11 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState('NL');
   const { holidays, isHolidaysLoading, holidayLoadingError } = useHolidays(selectedCountry, CURRENT_YEAR);
 
-  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  // keep the prop's memory address identical, need to use with React.memo
+  const handleCountryChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const countryCode = event.target.value;
     setSelectedCountry(countryCode);
-  };
+  }, []);
 
   return (
     <>

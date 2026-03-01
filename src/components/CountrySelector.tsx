@@ -1,6 +1,8 @@
+import React from 'react';
 import type { CountrySelectorProps } from '../types';
 
-export default function CountrySelector({
+// React.memo - Only render if the props actually change
+export default React.memo(function CountrySelector({
     countries,
     selectedCountry,
     countryLoadingError,
@@ -23,4 +25,4 @@ export default function CountrySelector({
             </select>
         </div>
     );
-}
+})

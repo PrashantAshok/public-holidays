@@ -1,6 +1,8 @@
+import React from "react";
 import type { HolidaysProps } from "../types";
 
-export default function PublicHolidays({ holidays, holidayLoadingError }: HolidaysProps) {
+// React.memo - Only render if the props actually change
+export default React.memo(function PublicHolidays({ holidays, holidayLoadingError }: HolidaysProps) {
     if (holidayLoadingError) {
         return <p className="error">{holidayLoadingError}</p>;
     }
@@ -24,4 +26,4 @@ export default function PublicHolidays({ holidays, holidayLoadingError }: Holida
             }
         </ol>
     )
-}
+})
